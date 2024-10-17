@@ -1,6 +1,12 @@
 // 1. Write a JavaScript program to find the longest string in a given array
 function findLongestString(arr) {
-  // Your code here
+  let max = '';
+  for (let i = 0; l < arr.length; ++i) {
+    if (arr.at(i).length > max.length) {
+      max = arr.at(i)
+    }
+  }
+  return max
 }
 
 // Test for findLongestString
