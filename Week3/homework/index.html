@@ -10,6 +10,10 @@
 <body>
 	<div id='main-container'>
 		<div id='weather-container'>
+			<h3 id="date"></h3>
+			<h2 id="city-name"></h2>
+			<div id='current-weather'></div>
+            <div id="forecast"></div>
 		</div> 
 	</div>
 	<div id='side-container'>
@@ -23,7 +27,7 @@
 
 <script>
 		// USE YOUR OWN API KEY
-		const apiKey = "";
+		const apiKey = "17f7111ec55cfcf16c16a7d8c5a65b63";
 
         // variable that stores the city that is chosen
 		let city;
@@ -88,20 +92,68 @@
 
 		// function that is called whenever a city has been selected
 		function selectCity(fullName, name, state, lat, lon) {
-			// hides the search-results-list since it is not needed right now
-			document.querySelector('#search-results-list').className = 'hidden'
-			// sets the global city variable
-			document.querySelector("#search-input").value = ''
+			document.querySelector('#search-results-list').classList.add('hidden');
 			city = {
 				fullName: fullName,
 				name: name,
 				state: state,
 				lat: lat,
 				lon: lon
-			}
-			//printing the city object to the console
-			console.log(city);
-            // BEGIN CODING HERE
+			};
+			document.querySelector("#search-input").value = '';
+			document.getElementById('city-name').innerText = `Weather for ${city.fullName}`;
+			
+			const apiCall = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey}`;
+			fetch(apiCall)
+				.then(response => response.json())
+				.then(renderForecast)
+				.catch(error => console.error("Error:", error));
+		}
+
+		function renderForecast(data) {
+			const currentWeatherDiv = document.getElementById('current-weather');
+			const forecastDiv = document.getElementById('forecast');
+			currentWeatherDiv.innerHTML = '';
+			forecastDiv.innerHTML = '';
+
+			// Get current day data
+			const currentDayData = data.list[0];
+			const { temp } = currentDayData.main;
+			const { description, icon } = currentDayData.weather[0]; // Corrected this line
+
+			currentWeatherDiv.innerHTML = `
+				<div class="current-day">
+					<h3>${description}</h3>
+					<div id="current-weather-details">
+						<h1>${temp.toFixed(1)}°F</h1>
+						<img src="http://openweathermap.org/img/wn/${icon}.png" alt="${description}">
+					</div> <!-- Corrected closing div here -->
+				</div>
+			`;
+
+			const dailyForecasts = {};
+
+			data.list.forEach(item => {
+				const date = new Date(item.dt * 1000);
+				const day = date.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric' });
+
+				if (!dailyForecasts[day]) {
+					dailyForecasts[day] = { high: item.main.temp_max, low: item.main.temp_min, icon, description };
+				} else {
+					dailyForecasts[day].high = Math.max(dailyForecasts[day].high, item.main.temp_max);
+					dailyForecasts[day].low = Math.min(dailyForecasts[day].low, item.main.temp_min);
+				}
+			});
+
+			Object.entries(dailyForecasts).forEach(([day, { high, low, icon }]) => {
+				forecastDiv.innerHTML += `
+					<div class="day-forecast">
+						<h3>${day}</h3>
+						<img src="http://openweathermap.org/img/wn/${icon}.png" alt="Weather Icon">
+						<p>${high.toFixed(1)}°F to ${low.toFixed(1)}°F</p>
+					</div>
+				`;
+			});
 		}
 	</script>
 </html>

@@ -17,15 +17,25 @@
 </body>
 
 <script>
-		const apiKey = "";
+		const apiKey = "ff5f64fed4613bd628c79a311200c7df";
 
 		let temp;
 		let lat;
 		let lon;
 
 		function getData() {
-			let apiCall = ``;
+			let apiCall = `http://api.openweathermap.org/geo/1.0/direct?q=Austin,TX,USA&limit=5&appid=6dc87f0d902ad7e89bffc74e3ba537ef`;
 			// get lat and long
+
+			fetch(apiCall)
+				.then((response) => response.json()) 
+				.then((data) => {
+					console.log(data)
+
+					
+				})
+
+			
 			// get temp
 		}
 
