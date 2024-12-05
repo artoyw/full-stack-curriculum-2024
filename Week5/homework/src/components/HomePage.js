@@ -34,7 +34,7 @@ export default function HomePage() {
     if (!currentUser) {
       navigate('/login')
     } else {
-      fetch(`http://localhost:3001/tasks/${currentUser}`)  // Use currentUser to fetch tasks for the logged-in user
+      fetch(`${process.env.REACT_APP_API_URL}/tasks/${currentUser}`)  // Use currentUser to fetch tasks for the logged-in user
       .then((response) => response.json())
       .then((data) => {
         console.log("Fetched tasks:", data);  // Log the fetched tasks
