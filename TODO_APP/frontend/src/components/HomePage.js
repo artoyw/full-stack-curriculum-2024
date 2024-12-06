@@ -34,12 +34,13 @@ export default function HomePage() {
     if (!currentUser) {
       navigate('/login')
     } else {
-      const url = `${process.env.REACT_APP_API_URL}/tasks/${currentUser}`;  // Use currentUser to fetch tasks for the logged-in user
+      // const url = `${process.env.REACT_APP_API_URL}/tasks/${currentUser}`;  // Use currentUser to fetch tasks for the logged-in user
 
-      console.log("API URL: ", process.env.REACT_APP_API_URL);
-      console.log("Environment Variables:", process.env);
-      console.log("Cur user: ", currentUser);
-      console.log("Fetching: ", url);
+      // console.log("API URL: ", process.env.REACT_APP_API_URL);
+      // console.log("Environment Variables:", process.env);
+
+      // console.log("Cur user: ", currentUser);
+      // console.log("Fetching: ", url);
 
       fetch(`${process.env.REACT_APP_API_URL}/tasks/${currentUser}`)
       .then((response) => response.json())
